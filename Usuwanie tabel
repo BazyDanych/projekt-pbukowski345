@@ -1,0 +1,4 @@
+Usuwanie tabel:
+Aby usunąć tabele należy zacząć od usunięcia tabeli które zawierają klucze obce do innych tabel albo i smych kluczy jeżeli usunięcie całej tabeli jest nie możliwe np.
+aby DROP TABLE Moduł; zadziałało należy usunąć tabele Kurs-moduł moduł-lekcja.
+Stosując się do tej zasady wystarczy użwać DROP TABLE do usuwania tabel.

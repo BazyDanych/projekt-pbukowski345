@@ -1,0 +1,41 @@
+Użytkownicy którzy nie stworzli żadnego kursu:
+
+SELECT imię, nazwisko FROM "Użytkownik" WHERE id_użytkownik NOT IN (SELECT id_twórca FROM "Kurs");
+  imię  |  nazwisko
+--------+------------
+ Daniel | Marczak
+ Piotr  | Malinowski
+ Hubert | Ostrowski
+ 
+ Użytkownicy którzy nie otrzymali żadnego certyfikatu:
+ 
+ SELECT imię, nazwisko FROM "Użytkownik" WHERE id_użytkownik NOT IN(SELECT id_użytkownik FROM "Uzyskane-certyfikaty");
+  imię  |  nazwisko
+--------+------------
+ Jan    | Kowalski
+ Daniel | Marczak
+ Piotr  | Malinowski
+ 
+ Osoby które nie uczstniczą w żadnym kursie:
+ 
+ SELECT imię, nazwisko FROM "Użytkownik" WHERE id_użytkownik NOT IN(SELECT id_uzytkownik FROM "Użytkownik-kurs");
+  imię  | nazwisko
+--------+----------
+ Jan    | Kowalski
+ Janusz | Nowak
+ 
+ Kursy które nie wysłały żadnych powiadomień;
+ 
+ SELECT nazwa_kursu FROM "Kurs" WHERE id_kurs NOT IN(SELECT id_kurs FROM "Powiadomienia");
+   nazwa_kursu
+-----------------
+ Algebra liniowa
+ Bazy danych
+ 
+ Kursy nie wykonane przez użytkownika(takie z których nie dostał certyfikatu):
+ 
+ SELECT nazwa_kursu FROM "Kurs" WHERE id_kurs NOT IN(SELECT id_Kurs FROM "Certyfikat" WHERE id_certyfikat IN (SELECT id_certyfikat FROM "Uzyskane-certyfikaty" WHERE id_użytkownik IN(SELECT id_użytkownik FROM "Użytkownik" WHERE nazwisko='Ostrowski') ));
+     nazwa_kursu
+----------------------
+ Matematyka dyskretna
+ Bazy danych

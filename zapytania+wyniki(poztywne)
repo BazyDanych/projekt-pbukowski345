@@ -1,0 +1,108 @@
+Nazwy kursów użytkownika o podanym id:
+
+SELECT nazwa_kursu FROM "Kurs" WHERE id_kurs IN (SELECT id_kurs FROM "Użytkownik-kurs" WHERE id_uzytkownik =3);
+     nazwa_kursu
+----------------------
+ Matematyka dyskretna
+ Algebra liniowa
+ 
+ Ranking najlepszych kursów(sortowanie po ocenie):
+ 
+ SELECT nazwa_kursu FROM "Kurs" ORDER BY ocena DESC;
+     nazwa_kursu
+----------------------
+ Bazy danych
+ Algebra liniowa
+ Matematyka dyskretna
+ 
+ Lista modułów z kursu bazy danych: 
+ 
+ SELECT nazwa FROM "Moduł" WHERE id_moduł IN (SELECT id_moduł FROM "Kurs-moduł" WHERE id_kurs IN (SELECT id_kurs FROM "Kurs" WHERE nazwa_kursu='Bazy danych'));
+             nazwa
+--------------------------------
+ Wyszukiwanie danych w SQL
+ Tworzenie i edycja tabel w SQL
+ 
+ Historia wysyłania zadań przez danego użytkownika:
+ 
+ SELECT id_zadanie, czas_wykonania FROM "Wykonane-zadania" WHERE "id_użytkownik-kurs" IN (SELECT "id_użytkownik-kurs" FROM "Użytkownik-kurs" WHERE id_uzytkownik IN (SELECT id_użytkownik FROM "Użytkownik" WHERE imię='Piotr')) AND czy_wykonane='YES';
+ id_zadanie | czas_wykonania
+------------+----------------
+          1 | 2020-02-05
+          2 | 2020-02-05
+          3 | 2020-02-05
+          4 | 2020-02-07
+          5 | 2020-02-11
+          6 | 2020-02-11
+          7 | 2020-02-13
+          8 | 2020-02-13
+          9 | 2020-02-20
+         11 | 2020-02-19
+         12 | 2020-02-21
+         13 | 2020-03-05
+         14 | 2020-03-05
+         15 | 2020-03-05
+         16 | 2020-03-06
+         17 | 2020-03-11
+         19 | 2020-03-13
+
+
+Wszykanie powiadomień dla konkretengo użytkownika:	
+	 
+SELECT treść_powiadomienia FROM "Powiadomienia" WHERE id_użytkownik IN(SELECT id_użytkownik FROM "Użytkownik" WHERE nazwisko='Marczak');
+                             treść_powiadomienia
+-----------------------------------------------------------------------------
+ Otwato moduł 1 w kursie Matematyka dyskretna
+ Wykonane zadania w 3 module w kursie Matematyka dyskretna zostały ocenione.
+ 
+ Użytkownicy i punkty które zdobyli z poszczególnych kursów:
+ 
+ SELECT U.imię, U.nazwisko, KU.nazwa_kursu, UK.zdobyte_punkty FROM "Użytkownik-kurs" AS UK INNER JOIN "Użytkownik" AS U ON U.id_użytkownik = UK.id_uzytkownik INNER JOIN "Kurs" AS KU ON KU.id_kurs = UK.id_kurs ;
+  imię  |  nazwisko  |     nazwa_kursu      | zdobyte_punkty
+--------+------------+----------------------+----------------
+ Daniel | Marczak    | Matematyka dyskretna |             16
+ Daniel | Marczak    | Algebra liniowa      |             14
+ Piotr  | Malinowski | Matematyka dyskretna |             16
+ Piotr  | Malinowski | Algebra liniowa      |              9
+ Hubert | Ostrowski  | Bazy danych          |             14
+ 
+ Wykaz kursów prowadzonych przez konkretnego użytkownika:
+ 
+ SELECT nazwa_kursu FROM "Kurs" WHERE id_prowadzący IN(SELECT id_użytkownik FROM "Użytkownik" WHERE nazwisko='Nowak');
+   nazwa_kursu
+-----------------
+ Algebra liniowa
+ Bazy danych
+ 
+ ID zadań których nie wykonał konkretny użytkownik:
+ 
+ SELECT id_zadanie FROM "Wykonane-zadania" WHERE czy_wykonane='NO' AND "id_użytkownik-kurs" IN (SELECT "id_użytkownik-kurs" FROM "Użytkownik-kurs" WHERE id_uzytkownik IN(SELECT id_użytkownik FROM "Użytkownik" WHERE nazwisko='Malinowski') );
+ id_zadanie
+------------
+         20
+         18
+
+Wykaz kursów z konkretnej kategorii:
+		 
+SELECT nazwa_kursu FROM "Kurs" WHERE id_kurs IN (SELECT id_kurs FROM "Kurs-kategoria" WHERE id_kategoria IN (SELECT id_kategorie_kursów FROM "Kategorie_kursów"  WHERE nazwa_kategorii='Matematyka'));
+     nazwa_kursu
+----------------------
+ Matematyka dyskretna
+ Algebra liniowa
+ 
+ Kursy z więcej niż 1 uczestnikiem:
+ 
+ SELECT nazwa_kursu FROM "Kurs" WHERE ilość_użytkowników>1;
+     nazwa_kursu
+----------------------
+ Matematyka dyskretna
+ Algebra liniowa
+ 
+ Średnie ocen użytkowników:
+ 
+ SELECT AVG(ocena), imię, nazwisko FROM "Użytkownik-kurs" AS UK INNER JOIN "Użytkownik" AS U ON UK.id_uzytkownik = U.id_użytkownik Group by imię, nazwisko;
+ avg |  imię  |  nazwisko
+-----+--------+------------
+   5 | Hubert | Ostrowski
+   5 | Daniel | Marczak
+ 4.5 | Piotr  | Malinowski
